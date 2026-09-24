@@ -32,13 +32,13 @@ export const USER_PROFILE = {
 export const INITIAL_ACCOUNTS: BankAccount[] = [
   {
     id: 'acc-1',
-    name: 'Premier Liquidity Checking',
+    name: 'Premier Current Account',
     type: 'checking',
     accountNumber: '8940 3120 4821',
     routingNumber: '021000089',
     balance: 284520.40,
     availableBalance: 282120.40,
-    currency: 'USD',
+    currency: 'NGN',
     colorTheme: 'zinc'
   },
   {
@@ -49,32 +49,32 @@ export const INITIAL_ACCOUNTS: BankAccount[] = [
     routingNumber: '021000089',
     balance: 840000.00,
     availableBalance: 840000.00,
-    currency: 'USD',
+    currency: 'NGN',
     interestRate: 4.85,
     colorTheme: 'emerald'
   },
   {
     id: 'acc-3',
-    name: 'Zurich Multi-Currency Vault',
+    name: 'Global Dollar Account',
     type: 'multicurrency',
     accountNumber: 'CH93 0076 2011 6238 5291 1',
     routingNumber: '021000089',
     iban: 'CH9300762011623852911',
     swiftBic: 'AURECHZZ',
-    balance: 238420.10,
+    balance: 500.10,
     availableBalance: 238420.10,
-    currency: 'EUR',
+    currency: 'USD',
     colorTheme: 'amber'
   },
   {
     id: 'acc-4',
-    name: 'Venture Escrow & Angel Capital',
+    name: 'Venture Capital Reserve',
     type: 'investment',
     accountNumber: '6102 4492 8831',
     routingNumber: '021000089',
     balance: 120000.00,
     availableBalance: 120000.00,
-    currency: 'USD',
+    currency: 'NGN',
     colorTheme: 'indigo'
   }
 ];
@@ -314,10 +314,10 @@ export const INITIAL_CARDS: PaymentCard[] = [
 export const INITIAL_BILLS: BillPayment[] = [
   {
     id: 'bill-1',
-    billerName: 'Manhattan Penthouse HOA & Co-Op Fees',
+    billerName: 'Ikeja Electric Electricity Bill',
     category: 'Real Estate & Residence',
     accountNumber: 'HOA-77401-NY',
-    amount: 6850.00,
+    amount: 16850.00,
     dueDate: '2026-10-01',
     frequency: 'Monthly',
     autoPay: true,
@@ -326,7 +326,7 @@ export const INITIAL_BILLS: BillPayment[] = [
   },
   {
     id: 'bill-2',
-    billerName: 'NetJets Quarterly Fractional Maintenance',
+    billerName: 'Estate Service Charge',
     category: 'Aviation & Travel',
     accountNumber: 'NJ-AC-5510',
     amount: 14200.00,
@@ -338,7 +338,7 @@ export const INITIAL_BILLS: BillPayment[] = [
   },
   {
     id: 'bill-3',
-    billerName: 'ConEdison Private Service Grid',
+    billerName: 'MTN Business Internet',
     category: 'Utilities',
     accountNumber: 'CE-992014-9',
     amount: 940.25,

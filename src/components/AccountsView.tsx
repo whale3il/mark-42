@@ -46,13 +46,17 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
     setTimeout(() => setCopiedKey(null), 1800);
   };
 
-  const formatAmount = (num: number, cur: CurrencyCode = 'USD') => {
-    if (maskBalance) return '••••••';
-    const symbol = cur === 'EUR' ? '€' : cur === 'GBP' ? '£' : cur === 'CHF' ? 'CHF ' : '$';
-    return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
+// const formatAmount = (num: number, cur: CurrencyCode = 'NGN') => {
+//   if (maskBalance) return '••••••';
 
-  return (
+//   const symbol = cur === 'NGN' ? '₦' : '$';
+
+//   return `${symbol}${num.toLocaleString('en-US', {
+//     minimumFractionDigits: 2,
+//     maximumFractionDigits: 2
+//   })}`;
+// };
+   (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header and New Account Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

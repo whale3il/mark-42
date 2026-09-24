@@ -53,7 +53,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [activeChartMonth, setActiveChartMonth] = useState<number | null>(4); // August index default
 
   // Calculate Net Worth
-  const totalNetWorth = accounts.reduce((acc, a) => acc + a.balance, 0);
+  const USD_TO_NGN = 1500;
+
+  const totalNetWorth = accounts.reduce((total, account) => {
+  if (account.currency === 'USD') {
+    return total + account.balance * USD_TO_NGN;
+  }
+
+  return total + account.balance;
+}, 0);
   const liquidChecking = accounts.find(a => a.type === 'checking')?.balance || 0;
   const yieldVault = accounts.find(a => a.type === 'savings')?.balance || 0;
 
@@ -63,11 +71,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setTimeout(() => setCopiedId(null), 1800);
   };
 
-  const formatAmount = (num: number, cur: CurrencyCode = 'USD') => {
-    if (maskBalance) return '••••••';
-    const symbol = cur === 'EUR' ? '€' : cur === 'GBP' ? '£' : cur === 'CHF' ? 'CHF ' : '$';
-    return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
+const formatAmount = (num: number) => {
+  if (maskBalance) return '••••••';
+
+  return `₦${num.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+};
+
+const formatAccountAmount = (num: number, currency: CurrencyCode) => {
+  if (maskBalance) return '••••••';
+
+  const symbol = currency === 'USD' ? '$' : '₦';
+
+  return `${symbol}${num.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
 
   // Filter transactions
   const filteredTransactions = transactions.filter(tx => {
@@ -116,7 +138,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-neutral-400">
               <div>
-                <span>Liquid Operating: </span>
+                <span>Premier Current Account: </span>
                 <span className="font-mono text-neutral-200 tabular-nums">{formatAmount(liquidChecking, currency)}</span>
               </div>
               <span className="text-neutral-700">·</span>
@@ -183,7 +205,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 <div className="mt-3 text-xl font-bold tracking-tight text-neutral-100 font-sans tabular-nums">
-                  {formatAmount(acc.balance, acc.currency)}
+                  {formatAccountAmount(acc.balance, acc.currency)}
                 </div>
               </div>
 
@@ -331,7 +353,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                   <div className="text-right shrink-0">
                     <div className="font-mono text-neutral-200 tabular-nums">
-                      {formatAmount(bill.amount, currency)}
+                      {formatAmount(bill.amount, 'NGN')}
                     </div>
                     <button
                       onClick={() => onPayBillQuick(bill.id)}

@@ -73,12 +73,12 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-900 border border-neutral-800 shadow-inner">
-            <span className="text-base font-bold tracking-wider text-emerald-400 font-mono">AV</span>
+            <span className="text-base font-bold tracking-wider text-emerald-400 font-mono">WF</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-base font-semibold tracking-tight text-neutral-100 font-sans">
-                Aureus Wealth
+                Whales Finance
               </span>
               <span className="text-[11px] font-medium tracking-wider text-neutral-500 uppercase">
                 Private Bank
@@ -88,21 +88,21 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Currency Switcher */}
-        <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-md bg-neutral-900/90 border border-neutral-800 text-xs">
-          {(['USD', 'EUR', 'GBP', 'CHF'] as CurrencyCode[]).map((curr) => (
-            <button
-              key={curr}
-              onClick={() => setCurrency(curr)}
-              className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
-                currency === curr
-                  ? 'bg-neutral-800 text-neutral-100 font-medium'
-                  : 'text-neutral-400 hover:text-neutral-200'
-              }`}
-            >
-              {curr}
-            </button>
-          ))}
-        </div>
+        {/* <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-md bg-neutral-900/90 border border-neutral-800 text-xs">
+              {(['NGN', 'USD'] as CurrencyCode[]).map((curr) => (
+              <button
+                key={curr}
+                onClick={() => setCurrency(curr)}
+                className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
+                  currency === curr
+                    ? 'bg-neutral-800 text-neutral-100 font-medium'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                {curr}
+              </button>
+              ))}
+        </div> */}
       </div>
 
       {/* Center / Right Main Navigation Elements */}

@@ -43,7 +43,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isDesignMode, setIsDesignMode] = useState<boolean>(false);
   const [maskBalance, setMaskBalance] = useState<boolean>(false);
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
+  const [currency, setCurrency] = useState<CurrencyCode>('NGN');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Theme Management (Dark / Light Theme Switcher)
@@ -52,7 +52,7 @@ export default function App() {
       const saved = localStorage.getItem('aureus_theme');
       if (saved === 'light' || saved === 'dark') return saved;
     }
-    return 'dark';
+    return 'dark';  
   });
 
   useEffect(() => {

@@ -80,10 +80,13 @@ export const DesignSpecView: React.FC<{ onReturnToApp: () => void }> = ({ onRetu
           <div className="p-6 rounded-2xl border border-neutral-800 bg-neutral-900/50 space-y-4">
             <h2 className="text-sm font-semibold text-neutral-100">60-30-10 Discipline & Token Palette</h2>
             <p className="text-xs text-neutral-400 leading-relaxed max-w-3xl">
-              Strict color budget: <strong>60%</strong> neutral dark obsidian canvas (<code className="font-mono text-neutral-300">#0a0a0a</code>), <strong>30%</strong> structural card surfaces (<code className="font-mono text-neutral-300">#141414</code>) with hairline 1px borders (<code className="font-mono text-neutral-300">rgba(255,255,255,0.08)</code>), and <strong>10%</strong> high-intent accents (<code className="font-mono text-emerald-400">#10b981</code>).
+              Strict color budget: <strong>60%</strong> neutral canvas, <strong>30%</strong> structural card surfaces with hairline 1px borders, and <strong>10%</strong> high-intent emerald accents. The light theme meticulously mirrors these optical weights with crisp Executive Slate and Pure White cards.
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+            <div className="text-xs font-semibold text-neutral-300 font-mono uppercase text-[11px] pt-1">
+              Dark Theme (Obsidian Matrix)
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               <div className="p-3 rounded-xl border border-neutral-800 bg-neutral-950">
                 <div className="w-full h-12 rounded-lg bg-neutral-950 border border-neutral-800 mb-2" />
                 <div className="text-xs font-semibold text-neutral-200">Canvas Base</div>
@@ -118,6 +121,47 @@ export const DesignSpecView: React.FC<{ onReturnToApp: () => void }> = ({ onRetu
                 <div className="w-full h-12 rounded-lg bg-rose-500 mb-2" />
                 <div className="text-xs font-semibold text-neutral-200">Critical Rose</div>
                 <div className="text-[10px] font-mono text-rose-400">#f43f5e · Error</div>
+              </div>
+            </div>
+
+            <div className="text-xs font-semibold text-neutral-300 font-mono uppercase text-[11px] pt-4">
+              Light Theme Mirror (Executive Slate & Pure White)
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-slate-100 border border-slate-300 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">Canvas Base</div>
+                <div className="text-[10px] font-mono text-slate-500">#f8fafc · 60%</div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-white border border-slate-200 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">Card Surface</div>
+                <div className="text-[10px] font-mono text-slate-500">#ffffff · 30%</div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-emerald-600 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">High-Contrast Green</div>
+                <div className="text-[10px] font-mono text-emerald-600">#059669 · 10%</div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-amber-600 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">Yield Amber</div>
+                <div className="text-[10px] font-mono text-amber-600">#d97706 · Alert</div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-cyan-600 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">Cyan Accents</div>
+                <div className="text-[10px] font-mono text-cyan-600">#0891b2 · State</div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-slate-300 bg-white shadow-xs">
+                <div className="w-full h-12 rounded-lg bg-rose-600 mb-2" />
+                <div className="text-xs font-semibold text-slate-900">Rose Critical</div>
+                <div className="text-[10px] font-mono text-rose-600">#e11d48 · Error</div>
               </div>
             </div>
           </div>

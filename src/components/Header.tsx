@@ -11,7 +11,11 @@ import {
   Clock,
   ChevronDown,
   Lock,
-  Compass
+  Compass,
+  Sun,
+  Moon,
+  Headphones,
+  MessageSquare
 } from 'lucide-react';
 import { BankNotification, CurrencyCode } from '../types/banking';
 import { USER_PROFILE } from '../data/mockData';
@@ -26,6 +30,10 @@ interface HeaderProps {
   notifications: BankNotification[];
   setNotifications: React.Dispatch<React.SetStateAction<BankNotification[]>>;
   onOpenTransfer: () => void;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
+  onNavigateSupport?: () => void;
+  supportUnreadCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -37,7 +45,11 @@ export const Header: React.FC<HeaderProps> = ({
   setCurrency,
   notifications,
   setNotifications,
-  onOpenTransfer
+  onOpenTransfer,
+  theme,
+  toggleTheme,
+  onNavigateSupport,
+  supportUnreadCount = 0
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -56,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
   const filteredNotifs = notifications.filter(n => notifFilter === 'all' || !n.read);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-neutral-800/80 bg-neutral-950/90 px-4 md:px-8 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-neutral-800/80 bg-neutral-950/90 px-4 md:px-8 backdrop-blur-md transition-colors">
       {/* Brand & Wordmark */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2.5">
@@ -93,20 +105,53 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Right Actions */}
+      {/* Center / Right Main Navigation Elements */}
       <div className="flex items-center gap-2 md:gap-3">
-        {/* Design System & Specs Switcher Button (Answers user request: "can i get a design not the app") */}
+        {/* Dedicated Support Button in Main Nav */}
+        <button
+          onClick={onNavigateSupport}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-800 bg-neutral-900/80 text-xs font-medium text-neutral-200 hover:text-white hover:bg-neutral-850 hover:border-neutral-700 transition-all shadow-xs relative"
+          title="Open Dedicated Customer Support & Real-Time Desk"
+        >
+          <div className="relative">
+            <Headphones className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
+          <span className="hidden sm:inline">Live Support</span>
+          {supportUnreadCount > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500 text-neutral-950 font-bold leading-tight">
+              {supportUnreadCount}
+            </span>
+          )}
+        </button>
+
+        {/* Theme Switcher Button (Dark / Light) */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 p-2 rounded-lg border border-neutral-800 bg-neutral-900/80 text-neutral-300 hover:text-neutral-100 hover:bg-neutral-850 hover:border-neutral-700 transition-all"
+          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400 transition-transform duration-300 rotate-0 hover:rotate-45" />
+          ) : (
+            <Moon className="w-4 h-4 text-sky-500 transition-transform duration-300 -rotate-12 hover:rotate-0" />
+          )}
+          <span className="sr-only">Toggle Theme</span>
+        </button>
+
+        {/* Design System & Specs Switcher Button */}
         <button
           onClick={() => setIsDesignMode(!isDesignMode)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
+          className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
             isDesignMode
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-sm'
-              : 'bg-neutral-900/80 border-neutral-800 text-neutral-300 hover:bg-neutral-800 hover:text-neutral-100'
+              : 'bg-neutral-900/80 border-neutral-800 text-neutral-300 hover:bg-neutral-850 hover:text-neutral-100'
           }`}
           title="Toggle between Interactive Banking Application and Design System Specifications"
         >
           {isDesignMode ? <Compass className="w-3.5 h-3.5 text-emerald-400" /> : <Layers className="w-3.5 h-3.5 text-neutral-400" />}
-          <span className="hidden sm:inline">
+          <span>
             {isDesignMode ? 'Application View' : 'Design Spec Mode'}
           </span>
         </button>
@@ -124,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Quick Send Action */}
         <button
           onClick={onOpenTransfer}
-          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500 text-neutral-950 font-medium text-xs hover:bg-emerald-400 transition-colors shadow-sm"
+          className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500 text-neutral-950 font-medium text-xs hover:bg-emerald-400 transition-colors shadow-sm"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span>Quick Wire</span>
@@ -247,7 +292,17 @@ export const Header: React.FC<HeaderProps> = ({
                   <span className="text-neutral-200">{USER_PROFILE.relationshipManager.name}</span>
                 </div>
               </div>
-              <div className="pt-2 border-t border-neutral-800">
+              <div className="pt-2 border-t border-neutral-800 space-y-1">
+                <button
+                  onClick={() => {
+                    onNavigateSupport?.();
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full text-left px-2 py-1.5 rounded text-xs text-emerald-400 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+                >
+                  <Headphones className="w-3.5 h-3.5" />
+                  <span>Customer Support Desk</span>
+                </button>
                 <button
                   onClick={() => {
                     setIsDesignMode(true);

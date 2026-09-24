@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   INITIAL_ACCOUNTS,
   INITIAL_TRANSACTIONS,
@@ -36,7 +36,7 @@ import { SupportView } from './components/SupportView';
 import { DesignSpecView } from './components/DesignSpecView';
 import { TransactionReceiptModal } from './components/TransactionReceiptModal';
 import { OpenVaultModal } from './components/OpenVaultModal';
-import { CheckCircle2, Menu, X } from 'lucide-react';
+import { CheckCircle2, Menu, X, Headphones, Sun, Moon } from 'lucide-react';
 
 export default function App() {
   // Navigation & View Mode
@@ -45,6 +45,36 @@ export default function App() {
   const [maskBalance, setMaskBalance] = useState<boolean>(false);
   const [currency, setCurrency] = useState<CurrencyCode>('USD');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Theme Management (Dark / Light Theme Switcher)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('aureus_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+    localStorage.setItem('aureus_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    showToast(`Switched to ${next === 'light' ? 'Executive Slate Light' : 'Obsidian Dark'} theme`);
+  };
+
+  // Dedicated Support Unread Counter State
+  const [supportUnreadCount, setSupportUnreadCount] = useState<number>(2);
 
   // Core Data States
   const [accounts, setAccounts] = useState<BankAccount[]>(INITIAL_ACCOUNTS);
@@ -250,8 +280,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
-      {/* Top Bar Contract */}
+    <div className={`min-h-screen ${theme === 'light' ? 'bg-slate-50 text-slate-900' : 'bg-neutral-950 text-neutral-100'} flex flex-col font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 transition-colors duration-200`}>
+      {/* Top Bar Contract with Theme Switcher & Main Support Navigation */}
       <Header
         maskBalance={maskBalance}
         setMaskBalance={setMaskBalance}
@@ -265,6 +295,13 @@ export default function App() {
           setActiveTab('transfers');
           if (isDesignMode) setIsDesignMode(false);
         }}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onNavigateSupport={() => {
+          setActiveTab('support');
+          if (isDesignMode) setIsDesignMode(false);
+        }}
+        supportUnreadCount={supportUnreadCount}
       />
 
       {/* Global Toast Notification */}
@@ -287,21 +324,40 @@ export default function App() {
             setActiveTab('support');
             if (isDesignMode) setIsDesignMode(false);
           }}
+          supportUnreadCount={supportUnreadCount}
         />
 
         {/* Viewport Content Area */}
         <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-full">
           {/* Mobile Tab Nav Selector */}
           <div className="md:hidden mb-4 flex items-center justify-between pb-3 border-b border-neutral-800">
-            <span className="text-xs font-semibold text-neutral-300 capitalize">
-              {isDesignMode ? 'Design System Specs' : activeTab}
-            </span>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400"
-            >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-neutral-300 capitalize">
+                {isDesignMode ? 'Design System Specs' : activeTab === 'support' ? 'Customer Support' : activeTab}
+              </span>
+              {activeTab === 'support' && supportUnreadCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500 text-neutral-950 font-bold">
+                  {supportUnreadCount} unread
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400"
+                title="Toggle Theme"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-sky-500" />}
+              </button>
+
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400"
+              >
+                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
           {mobileMenuOpen && (
@@ -316,7 +372,7 @@ export default function App() {
                 { id: 'bills', label: 'Bills' },
                 { id: 'statements', label: 'Statements' },
                 { id: 'security', label: 'Security' },
-                { id: 'support', label: 'Concierge' },
+                { id: 'support', label: `Support (${supportUnreadCount})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -325,13 +381,16 @@ export default function App() {
                     setIsDesignMode(false);
                     setMobileMenuOpen(false);
                   }}
-                  className={`p-2 rounded-lg text-left transition-colors ${
+                  className={`p-2 rounded-lg text-left transition-colors flex items-center justify-between ${
                     activeTab === tab.id && !isDesignMode
                       ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
                       : 'text-neutral-400'
                   }`}
                 >
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  {tab.id === 'support' && supportUnreadCount > 0 && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  )}
                 </button>
               ))}
               <button
@@ -339,7 +398,7 @@ export default function App() {
                   setIsDesignMode(true);
                   setMobileMenuOpen(false);
                 }}
-                className="col-span-2 p-2 rounded-lg text-center bg-neutral-800 text-emerald-400 font-medium"
+                className="col-span-2 p-2 rounded-lg text-center bg-neutral-850 text-emerald-400 font-medium"
               >
                 Design System & Spec Sheet
               </button>
@@ -438,7 +497,11 @@ export default function App() {
                 />
               )}
 
-              {activeTab === 'support' && <SupportView />}
+              {activeTab === 'support' && (
+                <SupportView
+                  onUnreadChange={(count) => setSupportUnreadCount(count)}
+                />
+              )}
             </>
           )}
         </main>

@@ -33,6 +33,7 @@ interface SidebarProps {
   isDesignMode: boolean;
   setIsDesignMode: (val: boolean) => void;
   onOpenAdvisorModal: () => void;
+  supportUnreadCount?: number;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -40,9 +41,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setActiveTab,
   isDesignMode,
   setIsDesignMode,
-  onOpenAdvisorModal
+  onOpenAdvisorModal,
+  supportUnreadCount = 0
 }) => {
-  const navItems: { id: NavTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  const navItems: { id: NavTab; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'accounts', label: 'Accounts & Vaults', icon: Landmark },
     { id: 'transfers', label: 'Transfers & Payees', icon: ArrowRightLeft },
@@ -52,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'bills', label: 'Scheduled Bills', icon: CalendarCheck },
     { id: 'statements', label: 'Statements & Tax', icon: FileText },
     { id: 'security', label: 'Security & Access', icon: ShieldCheck },
-    { id: 'support', label: 'Private Concierge', icon: Headphones },
+    { id: 'support', label: 'Support & Concierge', icon: Headphones, badge: supportUnreadCount },
   ];
 
   return (
@@ -74,21 +76,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     setActiveTab(item.id);
                     if (isDesignMode) setIsDesignMode(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                     isActive
                       ? 'bg-neutral-900 text-neutral-100 border border-neutral-800 shadow-sm'
                       : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/50'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-neutral-400'}`} />
-                  <span>{item.label}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-neutral-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+
+                  {item.badge && item.badge > 0 ? (
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500 text-neutral-950 font-bold">
+                      {item.badge}
+                    </span>
+                  ) : item.id === 'support' ? (
+                    <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  ) : null}
                 </button>
               );
             })}
           </nav>
         </div>
 
-        {/* Design System Spec Link (Directly serves user's "can i get a design not the app" intent) */}
+        {/* Design System Spec Link */}
         <div>
           <div className="px-3 pb-2 text-[11px] font-mono uppercase tracking-wider text-neutral-500">
             Design & Architecture
@@ -106,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>UI Design Specs & Tokens</span>
             </div>
             <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-900 text-neutral-400 border border-neutral-800">
-              v2.4
+              v2.5
             </span>
           </button>
         </div>
@@ -125,8 +137,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={onOpenAdvisorModal}
             className="mt-2.5 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-750 text-neutral-200 text-[11px] font-medium transition-colors border border-neutral-700/60"
           >
-            <span>Message Advisor</span>
-            <ExternalLink className="w-3 h-3" />
+            <span>Live Support Desk</span>
+            <ExternalLink className="w-3 h-3 text-emerald-400" />
           </button>
         </div>
       </div>

@@ -23,6 +23,14 @@
     --text-secondary: #475569;
   }
 
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: var(--font-sans);
     letter-spacing: -0.011em;

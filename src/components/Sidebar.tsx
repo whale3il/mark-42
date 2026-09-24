@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 shrink-0 border-r border-neutral-800/80 bg-neutral-950/60 flex flex-col justify-between p-4 hidden md:flex min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 shrink-0 border-r border-neutral-800/80 bg-neutral-950/60 flex flex-col justify-between p-4 hidden md:flex h-full overflow-y-auto">
       <div className="space-y-6">
         {/* Navigation Section */}
         <div>
@@ -125,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Relationship Manager Contact Card */}
-      <div className="pt-4 border-t border-neutral-800/80">
+      <div className="pt-4 border-t border-neutral-800/80 shrink-0">
         <div className="p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/90 text-xs">
           <div className="flex items-center justify-between text-[11px] text-neutral-400 mb-1.5">
             <span>Private Wealth Partner</span>

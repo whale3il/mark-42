@@ -280,7 +280,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'light' ? 'bg-slate-50 text-slate-900' : 'bg-neutral-950 text-neutral-100'} flex flex-col font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 transition-colors duration-200`}>
+    <div className={`h-screen flex flex-col overflow-hidden ${theme === 'light' ? 'bg-slate-50 text-slate-900' : 'bg-neutral-950 text-neutral-100'} font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 transition-colors duration-200`}>
       {/* Top Bar Contract with Theme Switcher & Main Support Navigation */}
       <Header
         maskBalance={maskBalance}
@@ -313,7 +313,7 @@ export default function App() {
       )}
 
       {/* Main Workspace Frame */}
-      <div className="flex-1 flex w-full">
+      <div className="flex-1 flex w-full min-h-0 overflow-hidden">
         {/* Sidebar Navigation */}
         <Sidebar
           activeTab={activeTab}
@@ -328,7 +328,7 @@ export default function App() {
         />
 
         {/* Viewport Content Area */}
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-full">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-full h-full">
           {/* Mobile Tab Nav Selector */}
           <div className="md:hidden mb-4 flex items-center justify-between pb-3 border-b border-neutral-800">
             <div className="flex items-center gap-2">

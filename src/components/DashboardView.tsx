@@ -65,7 +65,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const formatAmount = (num: number, cur: CurrencyCode = 'USD') => {
     if (maskBalance) return '••••••';
-    const symbol = cur === 'EUR' ? '€' : cur === 'GBP' ? '£' : cur === 'CHF' ? 'CHF ' : '$';
+    const symbol = cur === 'EUR' ? '€' : cur === 'GBP' ? '£' : cur === 'CHF' ? 'CHF ' : cur === 'NGN' ? '₦' : '$';
     return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 

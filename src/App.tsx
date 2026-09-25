@@ -36,6 +36,11 @@ import { SupportView } from './components/SupportView';
 import { DesignSpecView } from './components/DesignSpecView';
 import { TransactionReceiptModal } from './components/TransactionReceiptModal';
 import { OpenVaultModal } from './components/OpenVaultModal';
+import { LoginView } from './components/auth/LoginView';
+import { SignUpWizard } from './components/auth/SignUpWizard';
+import { UserProfileModal } from './components/UserProfileModal';
+import { AuthService } from './services/authService';
+import { AuthUser } from './types/auth';
 import { CheckCircle2, Menu, X, Headphones, Sun, Moon } from 'lucide-react';
 
 export default function App() {
@@ -76,8 +81,13 @@ export default function App() {
   // Dedicated Support Unread Counter State
   const [supportUnreadCount, setSupportUnreadCount] = useState<number>(2);
 
+  // Authentication & Session State
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => AuthService.getCurrentUser());
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
+
   // Core Data States
-  const [accounts, setAccounts] = useState<BankAccount[]>(INITIAL_ACCOUNTS);
+  const [accounts, setAccounts] = useState<BankAccount[]>(() => AuthService.getUserStoredAccounts());
   const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>(INITIAL_BENEFICIARIES);
   const [cards, setCards] = useState<PaymentCard[]>(INITIAL_CARDS);
@@ -279,9 +289,43 @@ export default function App() {
     showToast(`Segregated vault "${newAcc.name}" provisioned.`);
   };
 
+  // Render Authentication Flow when not logged in
+  if (!currentUser) {
+    if (authMode === 'signup') {
+      return (
+        <SignUpWizard
+          onComplete={(newUser, newAccount) => {
+            setCurrentUser(newUser);
+            setAccounts((prev) => [newAccount, ...prev.filter((a) => a.id !== newAccount.id)]);
+            setActiveTab('dashboard');
+            setIsDesignMode(false);
+            showToast(`Account successfully created! NUBAN: ${newAccount.accountNumber}`);
+          }}
+          onNavigateToLogin={() => setAuthMode('login')}
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
+      );
+    }
+
+    return (
+      <LoginView
+        onSuccess={(user) => {
+          setCurrentUser(user);
+          setActiveTab('dashboard');
+          setIsDesignMode(false);
+          showToast(`Welcome back, ${user.name}`);
+        }}
+        onNavigateToSignUp={() => setAuthMode('signup')}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
   return (
     <div className={`h-screen flex flex-col overflow-hidden ${theme === 'light' ? 'bg-slate-50 text-slate-900' : 'bg-neutral-950 text-neutral-100'} font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 transition-colors duration-200`}>
-      {/* Top Bar Contract with Theme Switcher & Main Support Navigation */}
+      {/* Top Bar Contract with Theme Switcher, Main Support Navigation & User Session */}
       <Header
         maskBalance={maskBalance}
         setMaskBalance={setMaskBalance}
@@ -302,6 +346,14 @@ export default function App() {
           if (isDesignMode) setIsDesignMode(false);
         }}
         supportUnreadCount={supportUnreadCount}
+        user={currentUser}
+        onLogout={() => {
+          AuthService.logout();
+          setCurrentUser(null);
+          setAuthMode('login');
+          showToast('Session locked. Signed out successfully.');
+        }}
+        onOpenProfile={() => setShowProfileModal(true)}
       />
 
       {/* Global Toast Notification */}
@@ -521,6 +573,25 @@ export default function App() {
         <OpenVaultModal
           onClose={() => setShowNewVaultModal(false)}
           onCreateAccount={handleCreateAccount}
+        />
+      )}
+
+      {/* User Profile & KYC Inspection Modal */}
+      {showProfileModal && currentUser && (
+        <UserProfileModal
+          user={currentUser}
+          onClose={() => setShowProfileModal(false)}
+          onLogout={() => {
+            setShowProfileModal(false);
+            AuthService.logout();
+            setCurrentUser(null);
+            setAuthMode('login');
+            showToast('Session locked. Signed out successfully.');
+          }}
+          onOpenSupport={() => {
+            setShowProfileModal(false);
+            setActiveTab('support');
+          }}
         />
       )}
     </div>

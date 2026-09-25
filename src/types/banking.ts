@@ -1,4 +1,4 @@
-export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'CHF';
+export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'CHF' | 'NGN';
 
 export interface BankAccount {
   id: string;

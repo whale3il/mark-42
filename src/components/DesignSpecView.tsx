@@ -333,6 +333,7 @@ export const DesignSpecView: React.FC<{ onReturnToApp: () => void }> = ({ onRetu
                 Wire Transfer Lifecycle: 4-Step Irrevocable Pipeline
               </div>
 
+              {/* Wire Transfer Lifecycle */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
                   <div className="font-mono text-neutral-500 text-[10px]">STEP 01</div>
@@ -356,6 +357,45 @@ export const DesignSpecView: React.FC<{ onReturnToApp: () => void }> = ({ onRetu
                   <div className="font-mono text-emerald-400 text-[10px]">STEP 04</div>
                   <div className="font-semibold text-emerald-300 mt-1">Settled Receipt</div>
                   <div className="text-[11px] text-neutral-300 mt-0.5">Cryptographic PDF receipt with reference ID</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Authentication & NUBAN Account Lifecycle */}
+            <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
+              <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
+                Authentication & NUBAN Onboarding Pipeline (Prisma / Express Architecture)
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+                <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
+                  <div className="font-mono text-neutral-500 text-[10px]">STAGE 01</div>
+                  <div className="font-semibold text-neutral-200 mt-1">User Account</div>
+                  <div className="text-[11px] text-neutral-400 mt-0.5">Identity credentials, email, password & CBN Tier 3 consent</div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
+                  <div className="font-mono text-neutral-500 text-[10px]">STAGE 02</div>
+                  <div className="font-semibold text-neutral-200 mt-1">Transaction PIN</div>
+                  <div className="text-[11px] text-neutral-400 mt-0.5">4-digit cryptographic transaction authorization key</div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
+                  <div className="font-mono text-neutral-500 text-[10px]">STAGE 03</div>
+                  <div className="font-semibold text-neutral-200 mt-1">Account Select</div>
+                  <div className="text-[11px] text-neutral-400 mt-0.5">Tier 3 Savings, Current, Domiciliary FX, or Escrow</div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
+                  <div className="font-mono text-neutral-500 text-[10px]">STAGE 04</div>
+                  <div className="font-semibold text-neutral-200 mt-1">NUBAN Minting</div>
+                  <div className="text-[11px] text-neutral-400 mt-0.5">10-digit CBN modulo-10 algorithm check digit calculation</div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/30">
+                  <div className="font-mono text-emerald-400 text-[10px]">STAGE 05</div>
+                  <div className="font-semibold text-emerald-300 mt-1">Vault Launch</div>
+                  <div className="text-[11px] text-neutral-300 mt-0.5">NIP clearing ready, redirect to executive dashboard</div>
                 </div>
               </div>
             </div>

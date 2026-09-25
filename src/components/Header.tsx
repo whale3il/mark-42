@@ -15,9 +15,12 @@ import {
   Sun,
   Moon,
   Headphones,
-  MessageSquare
+  MessageSquare,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
 import { BankNotification, CurrencyCode } from '../types/banking';
+import { AuthUser } from '../types/auth';
 import { USER_PROFILE } from '../data/mockData';
 
 interface HeaderProps {
@@ -34,6 +37,9 @@ interface HeaderProps {
   toggleTheme: () => void;
   onNavigateSupport?: () => void;
   supportUnreadCount?: number;
+  user?: AuthUser | null;
+  onLogout?: () => void;
+  onOpenProfile?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -49,11 +55,22 @@ export const Header: React.FC<HeaderProps> = ({
   theme,
   toggleTheme,
   onNavigateSupport,
-  supportUnreadCount = 0
+  supportUnreadCount = 0,
+  user,
+  onLogout,
+  onOpenProfile
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notifFilter, setNotifFilter] = useState<'all' | 'unread'>('all');
+
+  const activeUser = user || {
+    name: USER_PROFILE.name,
+    email: USER_PROFILE.email,
+    clientTier: 'Sovereign Tier',
+    avatarUrl: USER_PROFILE.avatarUrl,
+    relationshipManager: USER_PROFILE.relationshipManager
+  };
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -261,38 +278,50 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2 pl-2 pr-1.5 py-1 rounded-lg hover:bg-neutral-900 border border-transparent hover:border-neutral-800 transition-colors"
           >
             <img
-              src={USER_PROFILE.avatarUrl}
-              alt={USER_PROFILE.name}
+              src={activeUser.avatarUrl}
+              alt={activeUser.name}
               referrerPolicy="no-referrer"
               className="w-7 h-7 rounded-full object-cover border border-neutral-700"
             />
             <div className="hidden md:block text-left">
-              <div className="text-xs font-medium text-neutral-200 leading-none">{USER_PROFILE.name}</div>
-              <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Sovereign Tier</div>
+              <div className="text-xs font-medium text-neutral-200 leading-none">{activeUser.name}</div>
+              <div className="text-[10px] text-emerald-400 font-mono mt-0.5">{activeUser.clientTier || 'Sovereign Tier'}</div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
           </button>
 
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-64 rounded-xl border border-neutral-800 bg-neutral-900/95 p-3 shadow-2xl backdrop-blur-xl z-50">
+            <div className="absolute right-0 mt-2 w-64 rounded-xl border border-neutral-800 bg-neutral-900/95 p-3 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in">
               <div className="p-2 border-b border-neutral-800">
-                <div className="text-xs font-semibold text-neutral-100">{USER_PROFILE.name}</div>
-                <div className="text-xs text-neutral-400 truncate">{USER_PROFILE.email}</div>
+                <div className="text-xs font-semibold text-neutral-100">{activeUser.name}</div>
+                <div className="text-xs text-neutral-400 truncate">{activeUser.email}</div>
                 <div className="mt-1.5 text-[10px] font-mono text-emerald-400 flex items-center gap-1">
-                  <Lock className="w-3 h-3" /> Hardware Token Protected
+                  <Lock className="w-3 h-3" /> NIBSS & Hardware Protected
                 </div>
               </div>
               <div className="py-2 space-y-1 text-xs text-neutral-300">
                 <div className="px-2 py-1 flex items-center justify-between text-neutral-400">
-                  <span>Client ID</span>
-                  <span className="font-mono text-neutral-200">PB-8924-AVW</span>
+                  <span>Client Tier</span>
+                  <span className="font-mono text-emerald-400 text-[11px]">Private Wealth</span>
                 </div>
                 <div className="px-2 py-1 flex items-center justify-between text-neutral-400">
                   <span>Dedicated Advisor</span>
-                  <span className="text-neutral-200">{USER_PROFILE.relationshipManager.name}</span>
+                  <span className="text-neutral-200 text-xs truncate max-w-[120px]">{activeUser.relationshipManager.name}</span>
                 </div>
               </div>
               <div className="pt-2 border-t border-neutral-800 space-y-1">
+                {onOpenProfile && (
+                  <button
+                    onClick={() => {
+                      onOpenProfile();
+                      setShowProfileMenu(false);
+                    }}
+                    className="w-full text-left px-2 py-1.5 rounded text-xs text-neutral-200 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+                  >
+                    <UserIcon className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Client Profile & Limits</span>
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     onNavigateSupport?.();
@@ -312,6 +341,18 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   View Design Tokens & Specifications
                 </button>
+                {onLogout && (
+                  <button
+                    onClick={() => {
+                      onLogout();
+                      setShowProfileMenu(false);
+                    }}
+                    className="w-full text-left px-2 py-1.5 rounded text-xs text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-2 pt-1 border-t border-neutral-800/80 mt-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-red-400" />
+                    <span>Sign Out / Lock Session</span>
+                  </button>
+                )}
               </div>
             </div>
           )}

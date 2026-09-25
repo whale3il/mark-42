@@ -36,6 +36,7 @@ export const TransactionReceiptModal: React.FC<TransactionReceiptModalProps> = (
 
   const isInflow = transaction.amount > 0;
   const absAmount = Math.abs(transaction.amount);
+  const symbol = currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : currency === 'CHF' ? 'CHF ' : currency === 'NGN' ? '₦' : '$';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -59,7 +60,7 @@ export const TransactionReceiptModal: React.FC<TransactionReceiptModalProps> = (
             {isInflow ? 'CREDIT / INFLOW' : 'DEBIT / OUTFLOW'}
           </div>
           <div className={`text-3xl font-bold font-sans mt-1 tabular-nums ${isInflow ? 'text-emerald-400' : 'text-neutral-100'}`}>
-            {isInflow ? '+' : '-'}${absAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            {isInflow ? '+' : '-'}{symbol}{absAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
           <div className="text-xs text-neutral-300 font-medium mt-1">
             {transaction.merchant}

@@ -41,7 +41,7 @@ import { SignUpWizard } from './components/auth/SignUpWizard';
 import { UserProfileModal } from './components/UserProfileModal';
 import { AuthService } from './services/authService';
 import { AuthUser } from './types/auth';
-import { CheckCircle2, Menu, X, Headphones, Sun, Moon } from 'lucide-react';
+import { CheckCircle2, Menu, X, Headphones, Sun, Moon, LogOut } from 'lucide-react';
 
 export default function App() {
   // Navigation & View Mode
@@ -377,6 +377,12 @@ export default function App() {
             if (isDesignMode) setIsDesignMode(false);
           }}
           supportUnreadCount={supportUnreadCount}
+          onLogout={() => {
+            AuthService.logout();
+            setCurrentUser(null);
+            setAuthMode('login');
+            showToast('Session locked. Signed out successfully.');
+          }}
         />
 
         {/* Viewport Content Area */}
@@ -453,6 +459,19 @@ export default function App() {
                 className="col-span-2 p-2 rounded-lg text-center bg-neutral-850 text-emerald-400 font-medium"
               >
                 Design System & Spec Sheet
+              </button>
+              <button
+                onClick={() => {
+                  AuthService.logout();
+                  setCurrentUser(null);
+                  setAuthMode('login');
+                  setMobileMenuOpen(false);
+                  showToast('Session locked. Signed out successfully.');
+                }}
+                className="col-span-2 p-2 rounded-lg text-center bg-red-500/10 hover:bg-red-500/20 text-red-400 font-medium border border-red-500/25 flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Log Out / Sign In</span>
               </button>
             </div>
           )}

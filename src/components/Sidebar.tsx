@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   Headphones,
   ExternalLink,
-  Layers
+  Layers,
+  LogOut
 } from 'lucide-react';
 import { USER_PROFILE } from '../data/mockData';
 
@@ -34,6 +35,7 @@ interface SidebarProps {
   setIsDesignMode: (val: boolean) => void;
   onOpenAdvisorModal: () => void;
   supportUnreadCount?: number;
+  onLogout?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -42,7 +44,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isDesignMode,
   setIsDesignMode,
   onOpenAdvisorModal,
-  supportUnreadCount = 0
+  supportUnreadCount = 0,
+  onLogout
 }) => {
   const navItems: { id: NavTab; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -124,8 +127,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Relationship Manager Contact Card */}
-      <div className="pt-4 border-t border-neutral-800/80 shrink-0">
+      {/* Bottom Section: Relationship Manager Contact Card & Log Out */}
+      <div className="pt-4 border-t border-neutral-800/80 shrink-0 space-y-3">
         <div className="p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/90 text-xs">
           <div className="flex items-center justify-between text-[11px] text-neutral-400 mb-1.5">
             <span>Private Wealth Partner</span>
@@ -141,6 +144,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <ExternalLink className="w-3 h-3 text-emerald-400" />
           </button>
         </div>
+
+        {/* Log Out to Return to Sign In / Login */}
+        {onLogout && (
+          <button
+            type="button"
+            onClick={onLogout}
+            title="Log out and return to sign in"
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/15 border border-red-500/25 hover:border-red-500/40 transition-all duration-150 group shadow-sm active:scale-[0.99]"
+          >
+            <div className="flex items-center gap-2.5">
+              <LogOut className="w-4 h-4 text-red-400 group-hover:-translate-x-0.5 transition-transform" />
+              <span className="font-semibold tracking-tight">Log Out</span>
+            </div>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-red-400/80 bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
+              Sign In
+            </span>
+          </button>
+        )}
       </div>
     </aside>
   );

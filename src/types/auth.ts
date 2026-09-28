@@ -6,6 +6,7 @@ export interface AuthUser {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   name: string;
   email: string;
   phone: string;
@@ -18,6 +19,7 @@ export interface AuthUser {
   accountNumberMasked: string;
   memberSince: string;
   avatarUrl: string;
+  emailVerified?: boolean;
   relationshipManager: {
     name: string;
     title: string;
@@ -29,24 +31,54 @@ export interface AuthUser {
 
 export type AuthMode = 'login' | 'signup';
 
-export type SignUpStep =
-  | 'user_info'
-  | 'set_pin'
-  | 'choose_account'
-  | 'generate_nuban'
-  | 'success';
-
 export interface UserRegistrationPayload {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   phone: string;
-  dateOfBirth: string;
-  stateProvince: string;
   password: string;
-  confirmPassword: string;
-  agreedToTerms: boolean;
-  bvnConsent: boolean;
+}
+
+export interface LoginPayload {
+  identifier: string; // Email address or Username
+  password: string;
+  rememberMe?: boolean;
+}
+
+export interface GoogleAuthPayload {
+  token: string;
+  credential?: string;
+}
+
+export interface ForgotPasswordPayload {
+  identifier: string;
+}
+
+export interface VerifyEmailPayload {
+  email: string;
+  token: string;
+}
+
+export interface AuthApiResponse {
+  success: boolean;
+  user?: AuthUser;
+  token?: string;
+  requiresEmailVerification?: boolean;
+  message?: string;
+  error?: {
+    code:
+      | 'INVALID_CREDENTIALS'
+      | 'EMAIL_EXISTS'
+      | 'USERNAME_TAKEN'
+      | 'EMAIL_VERIFICATION_REQUIRED'
+      | 'GOOGLE_AUTH_FAILED'
+      | 'NETWORK_ERROR'
+      | 'VALIDATION_ERROR'
+      | 'SERVER_ERROR';
+    message: string;
+    field?: 'email' | 'username' | 'password' | 'phone' | 'firstName' | 'lastName';
+  };
 }
 
 export interface PinSetupPayload {

@@ -37,7 +37,7 @@ import { DesignSpecView } from './components/DesignSpecView';
 import { TransactionReceiptModal } from './components/TransactionReceiptModal';
 import { OpenVaultModal } from './components/OpenVaultModal';
 import { LoginView } from './components/auth/LoginView';
-import { SignUpWizard } from './components/auth/SignUpWizard';
+import { SignUpView } from './components/auth/SignUpView';
 import { UserProfileModal } from './components/UserProfileModal';
 import { AuthService } from './services/authService';
 import { AuthUser } from './types/auth';
@@ -293,13 +293,13 @@ export default function App() {
   if (!currentUser) {
     if (authMode === 'signup') {
       return (
-        <SignUpWizard
-          onComplete={(newUser, newAccount) => {
-            setCurrentUser(newUser);
-            setAccounts((prev) => [newAccount, ...prev.filter((a) => a.id !== newAccount.id)]);
+        <SignUpView
+          onSuccess={(user) => {
+            setCurrentUser(user);
+            setAccounts(AuthService.getUserStoredAccounts());
             setActiveTab('dashboard');
             setIsDesignMode(false);
-            showToast(`Account successfully created! NUBAN: ${newAccount.accountNumber}`);
+            showToast(`Welcome to Aureus Wealth, ${user.firstName}. Sovereign Vault Cleared.`);
           }}
           onNavigateToLogin={() => setAuthMode('login')}
           theme={theme}
@@ -312,6 +312,7 @@ export default function App() {
       <LoginView
         onSuccess={(user) => {
           setCurrentUser(user);
+          setAccounts(AuthService.getUserStoredAccounts());
           setActiveTab('dashboard');
           setIsDesignMode(false);
           showToast(`Welcome back, ${user.name}`);
